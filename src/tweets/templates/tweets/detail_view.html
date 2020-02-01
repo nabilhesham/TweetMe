@@ -1,3 +1,10 @@
-<p>{{ tweet.content }}<br>
-    {{ tweet.user }}<br> 
-    {{ tweet.timestamp | timesince }} ago </p><hr>
+{% extends "base.html" %}
+{% block title %}Tweet Detail | {{ block.super }}{% endblock title %}
+
+{% block content %}
+
+    <p>{{ tweet.content }}<br>
+        {{ tweet.user }}<br> 
+        {{ tweet.timestamp | timesince }} ago </p><hr>
+
+{% endblock content%}
