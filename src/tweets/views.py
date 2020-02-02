@@ -70,13 +70,13 @@ class TweetListView (ListView):
             )
         return queryset
 
-
-
-    # def get_context_data(self, *args, **kwargs):
-        # context = super(TweetListView, self).get_context_data(*args, **kwargs)
-    #     print(context)
-    #     context['anotherlist'] = Tweet.objects.all()
-        # return context
+    def get_context_data(self, *args, **kwargs):
+        context = super(TweetListView, self).get_context_data(*args, **kwargs)
+        # print(context)
+        # context['anotherlist'] = Tweet.objects.all()
+        context['create_form'] = TweetModelForm
+        context['create_url'] = reverse_lazy('tweets:create')
+        return context
 
 
 

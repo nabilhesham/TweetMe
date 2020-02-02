@@ -1,17 +1,13 @@
-{% extends "base.html" %}
-{% block title %}Tweet Detail | {{ block.super }}{% endblock title %}
+{% extends "base.html" %} {% block title %}Tweet Detail | {{ block.super }}{% endblock title %} {% block content %}
 
-{% block content %}
-
-    <div class="row">
-        <div class="col-sm-3">
-            <h1>{{ tweet.user }}</h1>
-        </div>
-        <div class="col-sm-9">
-            {{ tweet.content }}<br/><br/>
-            {{ tweet.timestamp | timesince }} ago
-        </div>
+<div class="row" style="margin: 1%;">
+    <div class="col-sm-3" style="background-color: yellow;">
+        <h1>{{ tweet.user }}</h1>
     </div>
+    <div class="col-sm-9">
+        {{ tweet.content }}<br/><br/> {{ tweet.timestamp | timesince }} ago
+    </div>
+</div>
 
 
 {% endblock content%}

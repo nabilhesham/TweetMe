@@ -1,31 +1,30 @@
-{% extends "base.html" %}
-{% block title %}Tweet List | {{ block.super }}{% endblock title %}
+{% extends "base.html" %} {% block title %}Tweet List | {{ block.super }}{% endblock title %} {% block content %}
 
-{% block content %}
 
-    <div class="row" style="justify-content:center">
-        <div class="col-sm-7 col-sm-offset-3">
-            {% comment %} {% include "tweets/search_form.html" %} {% endcomment %}
-            {% for tweet in object_list %}
-                <div class="media">
-                    {% if tweet.image %}
-                        <img src="..." class="mr-3" alt="...">
-                    {% endif %}
-                    <div class="media-body">
-                        {{ tweet.content }}<br/>
-                        via {{ tweet.user }} | {{ tweet.timestamp | timesince }} ago | <a href="{{ tweet.get_absolute_url }}">View</a>
-                    </div>
-                </div>
-                <hr/> 
-            {% empty %} 
-                {% if request.GET.q %}
-                    <p>No Tweets Found !</p>
-                {% else %}
-                    <p>No Tweets Yet !</p>
-                {% endif %}
-                <hr> 
-            {% endfor %}
-        </div>
+<div class="row" style="margin: 1%;">
+    <div class="col-sm-3" style="background-color: red; height:72px">
+        <h1>{{ request.user }}</h1>
     </div>
+    <div class="col-sm-9">
+        {% comment %} {% include "tweets/search_form.html" %} {% endcomment %} {% if not request.GET.q %}
+        <div>
+            {% include "tweets/form.html" with form=create_form action_url=create_url btn_title='Tweet' %}
+        </div>
+        <hr/> {% endif %} {% for tweet in object_list %}
+        <div class="media">
+            {% if tweet.image %}
+            <img src="..." class="mr-3" alt="..."> {% endif %}
+            <div class="media-body">
+                {{ tweet.content }}<br/> via {{ tweet.user }} | {{ tweet.timestamp | timesince }} ago | <a href="{{ tweet.get_absolute_url }}">View</a>
+            </div>
+        </div>
+        <hr/> {% empty %} {% if request.GET.q %}
+        <p>No Tweets Found !</p>
+        {% else %}
+        <p>No Tweets Yet !</p>
+        {% endif %}
+        <hr> {% endfor %}
+    </div>
+</div>
 
 {% endblock content %}

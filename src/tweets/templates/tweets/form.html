@@ -1,4 +1,6 @@
-<form class="form" action="" method="post">
-    {% csrf_token %} {{ form.as_p }}
-    <input type="submit" value="{{ btn_title }}">
+{% load crispy_forms_tags %}
+
+<form class="form bootstrap4" action="{% if action_url %}{{ action_url }}{% endif %}" method="post">
+    {% csrf_token %} {{ form | crispy }}
+    <input class="btn btn-primary" type="submit" value="{{ btn_title }}">
 </form>
