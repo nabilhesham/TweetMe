@@ -3,8 +3,15 @@
 
 {% block content %}
 
-    <p>{{ tweet.content }}<br>
-        {{ tweet.user }}<br> 
-        {{ tweet.timestamp | timesince }} ago </p><hr>
+    <div class="row">
+        <div class="col-sm-3">
+            <h1>{{ tweet.user }}</h1>
+        </div>
+        <div class="col-sm-9">
+            {{ tweet.content }}<br/><br/>
+            {{ tweet.timestamp | timesince }} ago
+        </div>
+    </div>
+
 
 {% endblock content%}

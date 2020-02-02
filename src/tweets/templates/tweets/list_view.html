@@ -3,19 +3,29 @@
 
 {% block content %}
 
-    {% include "tweets/search_form.html" %} 
-    {% for tweet in object_list %}
-        <p>{{ tweet.content }}<br> 
-            {{ tweet.user }}<br> 
-            {{ tweet.timestamp | timesince }} ago </p><br> 
-        {% empty %} 
-        {% if request.GET.q %}
-            <p>No Tweets Found !</p>
-        {% else %}
-            <p>No Tweets Yet !</p>
-        {% endif %}
-        <hr> 
-    {% endfor %}
-
+    <div class="row" style="justify-content:center">
+        <div class="col-sm-7 col-sm-offset-3">
+            {% comment %} {% include "tweets/search_form.html" %} {% endcomment %}
+            {% for tweet in object_list %}
+                <div class="media">
+                    {% if tweet.image %}
+                        <img src="..." class="mr-3" alt="...">
+                    {% endif %}
+                    <div class="media-body">
+                        {{ tweet.content }}<br/>
+                        via {{ tweet.user }} | {{ tweet.timestamp | timesince }} ago | <a href="{{ tweet.get_absolute_url }}">View</a>
+                    </div>
+                </div>
+                <hr/> 
+            {% empty %} 
+                {% if request.GET.q %}
+                    <p>No Tweets Found !</p>
+                {% else %}
+                    <p>No Tweets Yet !</p>
+                {% endif %}
+                <hr> 
+            {% endfor %}
+        </div>
+    </div>
 
 {% endblock content %}
