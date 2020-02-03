@@ -1,4 +1,120 @@
-{% extends "base.html" %} {% block title %}Tweet List | {{ block.super }}{% endblock title %} {% block content %}
+{% extends "base.html" %} {% block title %}Tweet List | {{ block.super }}{% endblock title %} 
+{% block script %} 
+<script>
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+
+    $(document).ready(function(){
+        /** console.log('working'); */
+        var query = getParameterByName('q');
+        var tweetList = []
+
+        function attachTweet(tweetValue, prepend){
+            var tweetUser = tweetValue.user;
+            var tweetContent = tweetValue.content;
+            var dateDisplay = tweetValue.date_display;
+            var tweetFormattedHtml = "<div class=\"media\"><div class=\"media-body\">"+tweetContent+"<br/> via "+tweetUser.username+" | "+ dateDisplay +" | "+"<a href=\"#\">View</a></div></div><hr/>"
+            if ( prepend == true ){
+                $('#tweet-container').prepend(tweetFormattedHtml)
+            } else {
+                $('#tweet-container').append(tweetFormattedHtml)
+            }
+
+        }
+
+        function parseTweets(){
+            if ( tweetList == 0 ){
+                $('#tweet-container').text('No Tweets Currently Found. ')
+            } else {
+                $.each(tweetList, function(key, value){
+                    var tweetKey = key;
+                    attachTweet(value)
+
+                });
+            }
+        }
+
+        function fetchTweets(){
+            /** console.log('fetching ..') */
+            $.ajax({
+                url : "api/tweets/",
+                method : "GET",
+                data : {
+                    'q': query
+                },
+                success : function(data){
+                    tweetList = data
+                    parseTweets()
+                },
+                error : function(data){
+                    console.log('error');
+                    console.log(data.statusText);
+                }
+    
+            });
+        };
+        fetchTweets()
+
+        var charsStart = 140;
+        var charsCurrent = 0;
+        $('#tweet-form').append("<span id='tweetCharsLeft'>"+charsStart+"</span>")
+
+        $('#tweet-form textarea').keyup(function(event){
+            var tweetValue = $(this).val();
+            charsCurrent = charsStart - tweetValue.length;
+            var spanChars = $('#tweetCharsLeft');
+            spanChars.text(charsCurrent);
+            if ( charsCurrent > 0 ){
+                spanChars.removeClass('grey-color');
+                spanChars.removeClass('red-color');
+            } else if ( charsCurrent == 0 ){
+                spanChars.addClass('grey-color');
+                spanChars.removeClass('red-color');
+            } else if ( charsCurrent < 0 ){
+                spanChars.removeClass('grey-color');
+                spanChars.addClass('red-color');
+            }
+        });
+
+        $('#tweet-form').submit(function(event){
+            event.preventDefault()
+            var that = $(this)
+            var formdata = that.serialize()
+            /** console.log(formdata) */
+            if ( charsCurrent >= 0){
+                $.ajax({
+                    url : "api/tweets/create/",
+                    method : "POST",
+                    data : formdata,
+                    success : function(data){
+                        /** console.log(data); */
+                        /**fetchTweets();*/
+                        that.find("input[type=text], textarea").val("");
+                        attachTweet(data, true)
+                    },
+                    error : function(data){
+                        console.log('error');
+                        console.log(data.statusText);
+                        console.log(data.status);
+                    }
+                });        
+            } else {
+                console.log('cannot send , tweet is too long!')
+            }
+            
+        });
+
+    });
+</script>
+{% endblock script %} 
+{% block content %}
 
 
 <div class="row" style="margin: 1%;">
@@ -8,9 +124,13 @@
     <div class="col-sm-9">
         {% comment %} {% include "tweets/search_form.html" %} {% endcomment %} {% if not request.GET.q %}
         <div>
-            {% include "tweets/form.html" with form=create_form action_url=create_url btn_title='Tweet' %}
+            {% include "tweets/form.html" with form=create_form action_url=create_url btn_title='Tweet' form_id='tweet-form' %}
         </div>
-        <hr/> {% endif %} {% for tweet in object_list %}
+        <hr/> {% endif %} 
+        <div id="tweet-container">
+
+        </div>
+        <!-- {% for tweet in object_list %}
         <div class="media">
             {% if tweet.image %}
             <img src="..." class="mr-3" alt="..."> {% endif %}
@@ -23,7 +143,7 @@
         {% else %}
         <p>No Tweets Yet !</p>
         {% endif %}
-        <hr> {% endfor %}
+        <hr> {% endfor %} -->
     </div>
 </div>
 
