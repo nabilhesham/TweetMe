@@ -1,0 +1,39 @@
+{% extends "base.html" %} {% block title %}User Detail | {{ block.super }}{% endblock title %} {% block content %}
+
+<div class="row" style="margin: 1%;">
+    <div class="col-sm-3" >
+        <h1>{{ object.username }}</h1>
+        <hr/>
+        <p>Followers : {{ object.followed_by.all.count }}</p>
+        <p>
+            <a class="btn btn-link" href="{{ object.profile.get_follow_url }}">
+                {% if following %}Unfollow{% else %}Follow{% endif %}
+            </a>
+        </p>
+    </div>
+    <div class="col-sm-9">
+        <h1>Tweets</h1>
+        {% for tweet in object.tweet_set.all %}
+            {{ tweet }}<br/>
+        {% endfor %}
+
+        <hr/>
+        <h2>Folllowing <small>({{ object.profile.get_following.count }})</small></h2>
+        {% for user in object.profile.get_following %}
+            <a href="/{{ user.username }}">{{ user.username }}</a><br/>
+        {% empty %}
+            <h4>Not Following any user</h4>
+        {% endfor %}
+
+        <h2>Followed by</h2>
+        {% for profile in object.followed_by.all %}
+            <a href="/{{ profile.user.username }}">{{ profile.user.username }}</a><br/>
+        {% empty %}
+            <h4>Not Followed by any user</h4>
+        {% endfor %}
+
+    </div>
+</div>
+
+
+{% endblock content%}

@@ -21,7 +21,7 @@
             var tweetUser = tweetValue.user;
             var tweetContent = tweetValue.content;
             var dateDisplay = tweetValue.date_display;
-            var tweetFormattedHtml = "<div class=\"media\"><div class=\"media-body\">"+tweetContent+"<br/> via "+tweetUser.username+" | "+ dateDisplay +" | "+"<a href=\"#\">View</a></div></div><hr/>"
+            var tweetFormattedHtml = "<div class=\"media\"><div class=\"media-body\">"+tweetContent+"<br/> via  <a href='"+tweetUser.url+"' >"+tweetUser.username+"</a>"+" | "+ dateDisplay +" | "+"<a href=\"#\">View</a></div></div><hr/>"
             if ( prepend == true ){
                 $('#tweet-container').prepend(tweetFormattedHtml)
             } else {
@@ -37,7 +37,6 @@
                 $.each(tweetList, function(key, value){
                     var tweetKey = key;
                     attachTweet(value)
-
                 });
             }
         }
